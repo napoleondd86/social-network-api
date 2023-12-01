@@ -32,18 +32,20 @@ const userSchema = new Schema (
 
   },
   {
-    /////////////// CREATE A VIRTUAL FOR FRIENDS COUNT on query
-  },
-  {
     timestamps: true,
     toJSON: {
-
+      
     },
     id: false,
-
+    
   }
-)
+  )
 
+
+userSchema.virtual("friendCount").get(() => {
+  return this.friends?.length
+})
+  
 const User = model("User", userSchema);
 
 module.exports = User;
