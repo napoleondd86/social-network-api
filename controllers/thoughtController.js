@@ -5,7 +5,7 @@ module.exports = {
   // get all thoughts
   async getThoughts(req, res) {
     try{
-      const payload = await Thought.find().populate(["thought", "reaction"]); // IDK IF THIS IS CORRECT ???????????????
+      const payload = await Thought.find(); // IDK IF THIS IS CORRECT ???????????????
       res.json({status: "success", payload});
       } catch(err) {
         console.log(err.message)
@@ -36,9 +36,10 @@ module.exports = {
   async updateThought(req, res){
     try{
       const payload = await Thought.findOneAndUpdate(
-        {_id: req.params.thoughtId},
-        { $set: req.body},
-        { runValidators: true, new: true}
+        {_id: req.params.thoughtId}, // THIS IS THE WHERE
+        { $set: req.body}, // THIS IS THE WHAT
+        { runValidators: true, new: true}, // new: true - returns the updated object
+        // runValidators:true - enforces validators from the schema on the updated object
       );
 
       if (!payload) {
@@ -53,7 +54,7 @@ module.exports = {
   // Delete a Thought
   async deleteThought(req, res) {
     try {
-      const payload = await Thought.findOneAndDelete({_id: req.params.userId});
+      const payload = await Thought.findByIdAndDelete(req.params.id); // WORK???????????????????
       if (!payload){
         res.status(404).json({message: "No user with that ID"});// PROBABLY WRONG ??????????????????????????????????????????
       }

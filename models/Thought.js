@@ -1,4 +1,7 @@
-const { Schema, Types, model} = require("mongoose");
+// const mongoose = require("mongoose"); // NOT NEEDED
+const { Schema, model } = require("mongoose");
+// import Sub Document
+const reactionSchema = require("./Reaction")
 
 const thoughtSchema = new Schema (
   {
@@ -12,13 +15,8 @@ const thoughtSchema = new Schema (
       type: String,
       required: true,
     },
-    /////////////// FIX THIS WITH A SUB DOCUMENT/SUB SCHEMA
-    reactions: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: "Reaction"
-      }
-    ] // _id values referencing Reaction (sub-model)
+    
+    reactions: [reactionSchema], // references sub Doc
   },
   {
     timestamps: true,
@@ -26,6 +24,15 @@ const thoughtSchema = new Schema (
 )
 
 
-const Thought = mongoose.model("Thought", thoughtSchema);
+const Thought = model("Thought", thoughtSchema);
 
 module.exports = Thought;
+
+/*
+each user can have many thoughts
+each user can have many thoughts
+each thought can have many reactions
+each thought can have one user
+each reaction can have one thought
+each reaction can have one user
+*/
