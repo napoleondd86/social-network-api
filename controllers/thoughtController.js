@@ -94,7 +94,7 @@ module.exports = {
   async createReaction(req, res) {
     try{
        // check if the provided ID is a valid ObjectId (could simply be missing a digit)
-       if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+       if (!mongoose.Types.ObjectId.isValid(req.params.thoughtId)) {
         res.status(400).json({message: "Invalid ID format"})
         return
       }
@@ -120,7 +120,7 @@ module.exports = {
   async deleteReaction(req, res){
     try{
        // check if the provided ID is a valid ObjectId (could simply be missing a digit)
-       if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+       if (!mongoose.Types.ObjectId.isValid(req.params.thoughtId)) {
         res.status(400).json({message: "Invalid ID format"})
         return
       }
@@ -140,7 +140,7 @@ module.exports = {
 
       res.json({status: "success", payload})
     } catch(err){
-      res.status(500).json({status: error, payload: err.mesage})
+      res.status(500).json({status: "error", payload: err.mesage})
     }
   }
 
