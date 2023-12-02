@@ -36,14 +36,15 @@ module.exports = {
   async updateThought(req, res){
     try{
       const payload = await Thought.findOneAndUpdate(
-        {_id: req.params.thoughtId}, // THIS IS THE WHERE
+        {_id: req.params.id}, // THIS IS THE WHERE
         { $set: req.body}, // THIS IS THE WHAT
         { runValidators: true, new: true}, // new: true - returns the updated object
         // runValidators:true - enforces validators from the schema on the updated object
       );
 
       if (!payload) {
-        res.status(404).json({message: "No user with this id!"});
+        res.status(404).json({message: "No thought with this id!"});
+        return
       }
 
       res.json({status: "success", payload})
@@ -56,10 +57,43 @@ module.exports = {
     try {
       const payload = await Thought.findByIdAndDelete(req.params.id); // WORK???????????????????
       if (!payload){
-        res.status(404).json({message: "No user with that ID"});// PROBABLY WRONG ??????????????????????????????????????????
+        res.status(404).json({message: "No thought with that ID"});// PROBABLY WRONG ??????????????????????????????????????????
       }
       res.json({status: "success", payload})
     } catch(err) {
+      res.status(500).json({status: error, payload: err.mesage})
+    }
+  },
+
+  async createReaction(req, res) {
+    try{
+      const payload = await Thought.findOneAndUpdate(
+        {_id: req.params.thoughtId}, // THIS IS THE WHERE
+        { $push: {
+          reactions: req.body
+        }}, // THIS IS THE WHAT
+        { runValidators: true, new: true}, // new: true - returns the updated object
+        // runValidators:true - enforces validators from the schema on the updated object
+      );
+      console.log(req.params.thoughtId)
+      res.json({status: "success", payload})
+    } catch (err){
+      res.status(500).json({status: error, payload: err.mesage})
+    }
+  },
+
+  async deleteReaction(req, res){
+    try{
+      const payload = await Thought.findOneAndUpdate(
+        {_id: req.params.thoughtId},
+        {$pull: {
+          reactions: {
+            reactionId: req.params.reactionId
+          }
+        }}
+      )
+      res.json({status: "success", payload})
+    } catch(err){
       res.status(500).json({status: error, payload: err.mesage})
     }
   }

@@ -31,12 +31,11 @@ module.exports = {
       res.status({status: "error", payload: err.message})
     }
   },
-  //////////////////// BROKEN .................WHY.??????????
   // Update a User
   async updateUser(req, res){
     try{
       const payload = await User.findOneAndUpdate(
-        {_id: req.params.thoughtId}, // THIS IS THE WHERE
+        {_id: req.params.id}, // THIS IS THE WHERE
         { $set: req.body}, // THIS IS THE WHAT and "$set" - only changes things that are changed
         { runValidators: true, new: true}, // new: true - returns the updated object
         // runValidators:true - enforces validators from the schema on the updated object
@@ -61,8 +60,47 @@ module.exports = {
       }
       res.json({status: "success", payload})
     } catch(err) {
-      res.status(500).json({status: "error", payload: err.mesage})
+      res.status(500).json({status: "error", payload: err.message})
+    }
+  },
+  // CREATE FRIEND
+  async createFriend(req, res) {
+    try{
+      const payload = await User.findOneAndUpdate(
+        {_id: req.params.id},
+        {$push: {
+          friends: req.params.friendId
+        }},
+        {runValidators: true, new: true}
+      )
+
+      if (!payload) {
+        return res.status(404).json({ message: "User not found." });
+      }
+      
+      res.json({status: "success", payload})
+    } catch(err) {
+      res.status(500).json({status: "error", payload: err.message})
+    }
+  },
+  async deleteFriend(req, res) {
+    try {
+      const payload = await User.findOneAndUpdate(
+        {_id: req.params.id},
+        {$pull: {friends: req.params.friendId} },
+        {new: true}
+      )
+
+      if(!payload){
+        return res.status(404).json({message: "User not found or friend not removed"})
+      }
+
+      res.json({status: "success", payload})
+    } catch (err){
+      res.status(500).json({status: "error", payload: err.message})
     }
   }
-
+  //addFriend deleteFriend and i only need to _id and "friends" _id in the req. params
+  // http://localhost:3001/api/user/656921fbbc49b7e17d07aa9e/friend/65692780d88c52d9be5f50f0
 }
+
