@@ -1,6 +1,5 @@
 const router = require("express").Router();
 
-////////////////////////// NOT FINISHED ////////////////////////////
 const {
   getUsers,
   getSingleUser,
@@ -36,5 +35,4 @@ thoughts has many reactions
 reactions have one thought
 
 
-http://localhost:3001/api/user/656a71c0713e5748fcb6f59b/friend/656928cb041f2f1d6b83f1d1
 */

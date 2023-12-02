@@ -1,6 +1,5 @@
 const router = require("express").Router();
 
-///////////////////////// NOT FINISHED ///////////////////////////////
 const {
   getThoughts,
   getSingleThought,
